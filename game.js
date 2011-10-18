@@ -381,7 +381,7 @@ window.onload = function() {
                 this._fallblock_kind = Math.floor(Math.random() * 7);
                 
                 if (is_valid_fallblock_position(this._field_blocks, 
-                	c_fallblock_patterns[this._fallblock_kind][this._fallblock_rotation], this._fallblock_pos_x, this._fallblock_pos_y))
+                    c_fallblock_patterns[this._fallblock_kind][this._fallblock_rotation], this._fallblock_pos_x, this._fallblock_pos_y))
                 {
                     if (is_erased) {
                         game.assets['se05.mp3'].play();
@@ -389,7 +389,7 @@ window.onload = function() {
                         game.assets['tm2_shoot001.mp3'].play();
                     }
                 } else {
-                	this._is_gameover = true;
+                    this._is_gameover = true;
                 }
             }
         });
