@@ -242,6 +242,7 @@ window.onload = function() {
         map._gravity_charge = 0;
         map._no_move_count = 0;
         map._no_move_count_limit = 20;
+        map._is_gameover = false;
         map.backgroundColor = '#333333';
         map.loadData(map._view_blocks);
         initialize_input_extention(game.input);
@@ -257,7 +258,7 @@ window.onload = function() {
             var is_move = false;
             var is_input = false;
             var new_rotation = this._fallblock_rotation;
-            {
+            if ( ! this._is_gameover) {
                 if (game.input.trig_right || game.input.repeat_right) {
                     diff_x = 1;
                     is_input = true;
@@ -347,7 +348,7 @@ window.onload = function() {
             } else {
                 this._no_move_count += 1;
             }
-            if (this._no_move_count_limit <= this._no_move_count || is_hard_drop) {
+            if ( ! this._is_gameover && (this._no_move_count_limit <= this._no_move_count || is_hard_drop)) {
                 copy_field_blocks(this._field_blocks, this._view_blocks);
                 var is_erased = false;
                 
@@ -372,20 +373,23 @@ window.onload = function() {
                     }
                 }
                 
-                if (this._fallblock_pos_x == c_fallblock_first_pos_x && this._fallblock_pos_y == c_fallblock_first_pos_y) {
-                    // game over
-                } else {
-                    this._fallblock_pos_x = c_fallblock_first_pos_x;
-                    this._fallblock_pos_y = c_fallblock_first_pos_y;
-                    this._fallblock_rotation = 0;
-                    this._gravity_charge = 0;
-                    this._no_move_count = 0;
-                    this._fallblock_kind = Math.floor(Math.random() * 7);
+                this._fallblock_pos_x = c_fallblock_first_pos_x;
+                this._fallblock_pos_y = c_fallblock_first_pos_y;
+                this._fallblock_rotation = 0;
+                this._gravity_charge = 0;
+                this._no_move_count = 0;
+                this._fallblock_kind = Math.floor(Math.random() * 7);
+                
+                if (is_valid_fallblock_position(this._field_blocks, 
+                	c_fallblock_patterns[this._fallblock_kind][this._fallblock_rotation], this._fallblock_pos_x, this._fallblock_pos_y))
+                {
                     if (is_erased) {
                         game.assets['se05.mp3'].play();
                     } else {
                         game.assets['tm2_shoot001.mp3'].play();
                     }
+                } else {
+                	this._is_gameover = true;
                 }
             }
         });
